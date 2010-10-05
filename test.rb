@@ -1,5 +1,6 @@
 require 'test/unit'
 require 'lib/progressbar'
+require 'stringio'
 
 class ProgressBarTest < Test::Unit::TestCase
   SleepUnit = 0.01
@@ -105,6 +106,15 @@ class ProgressBarTest < Test::Unit::TestCase
       pbar.inc
     }
     pbar.finish
+  end
+
+  def test_auto_title_length
+    output = StringIO.new
+    full_title = 'test(long but important progress-title)'.freeze
+    pbar = ProgressBar.new(full_title, 3, output)
+    pbar.finish
+    STDERR << output.string
+    assert output.string.include?(full_title)
   end
 end
 
